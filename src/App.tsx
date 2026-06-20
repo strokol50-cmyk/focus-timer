@@ -136,7 +136,7 @@ function PremiumScreen({ onClose }: { onClose: () => void }) {
       <div className="px-6 mb-8 text-center">
         <div className="flex items-baseline justify-center gap-1">
           <span className="text-5xl font-extralight text-white tabular-nums">
-            ${isAnnual ? '2.49' : '4.99'}
+            ${isAnnual ? '1.99' : '9.99'}
           </span>
           <span className="text-[#555] text-sm">/month</span>
         </div>
@@ -174,7 +174,7 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
-  const [isPremium] = useState(true); // Would come from auth/subscription
+  const [isPremium] = useState(false); // Would come from auth/subscription
   const [completedSessions, setCompletedSessions] = useState(() => {
   return Number(localStorage.getItem('completedSessions') || 0);
 });
@@ -490,6 +490,18 @@ bell.play().then(() => {
           Sesiones completadas: {localStorage.getItem('completedSessions') || 0}
         </div>
 
+         {isPremium ? (
+      <div className="text-center text-white/60 text-sm">
+         Racha actual: 5 días
+      </div>
+     ) : (
+    <button
+    onClick={() => setShowPremium(true)}
+    className="mt-2 text-amber-400 text-xs"
+  >
+    🔒 Estadísticas avanzadas disponibles en Premium
+  </button>
+)}
             <div className="text-[#333] text-xs tracking-[0.2em] uppercase">
               {formatTime(duration - remaining)} elapsed · {formatTime(remaining)} remaining
             </div>
