@@ -41,6 +41,13 @@ const PRESETS = [
   { seconds: 60 * 60, label: '1horas' },
 ];
 
+const ACHIEVEMENTS = [
+  { sessions: 10, title: '🌱 Principiante del Enfoque' },
+  { sessions: 25, title: '🌲 Concentración Constante' },
+  { sessions: 50, title: '🌊 Maestro de la Calma' },
+  { sessions: 100, title: '🌌 Leyenda OFF' },
+];
+
 const PREMIUM_FEATURES = [
   {
     icon: WindIcon,
@@ -63,6 +70,14 @@ const PREMIUM_FEATURES = [
     description: 'Adaptive sessions that respond to your focus patterns',
   },
 ];
+
+const THEMES = {
+  default: 'from-slate-950 to-black',
+  space: 'from-indigo-950 via-purple-950 to-black',
+  deepforest: 'from-green-950 via-emerald-950 to-black',
+  neonocean: 'from-cyan-950 via-blue-950 to-black',
+  cyber: 'from-fuchsia-950 via-purple-950 to-black',
+};
 
 function PremiumScreen({ onClose }: { onClose: () => void }) {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -175,6 +190,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
   const [isPremium] = useState(false); // Would come from auth/subscription
+  const [theme, setTheme] = useState('default');
   const [completedSessions, setCompletedSessions] = useState(() => {
   return Number(localStorage.getItem('completedSessions') || 0);
 });
@@ -298,6 +314,16 @@ bell.play().then(() => {
   const isComplete = timerState === 'completed';
   const isRunning = timerState === 'running';
   const isPaused = timerState === 'paused';
+  const unlockedAchievements = ACHIEVEMENTS.filter(
+  achievement => completedSessions >= achievement.sessions
+);
+
+  const level =
+    completedSessions >= 100 ? 5 :
+    completedSessions >= 50 ? 4 :
+    completedSessions >= 25 ? 3 :
+    completedSessions >= 10 ? 2 :
+    1;
 
   return (
     <>
@@ -307,7 +333,7 @@ bell.play().then(() => {
 
         {/* Animated particles */}
         {(isRunning || isPaused) && ambient !== 'none' && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+         <div className={`absolute inset-0 bg-gradient-to-b ${THEMES[theme]}`}>
             {[...Array(20)].map((_, i) => (
               <div
                 key={i}
@@ -467,6 +493,33 @@ bell.play().then(() => {
             })}
           </div>
 
+            {/* Theme selector */}
+              <div className="flex flex-wrap justify-center gap-2 mt-6">
+           {[
+            { id: 'default', label: 'Default' },
+            { id: 'space', label: '🌌 Space' },
+            { id: 'deepforest', label: '🌲 Forest' },
+            { id: 'neonocean', label: '🌊 Ocean' },
+            { id: 'cyber', label: '🤖 Cyber' },
+           ].map((themeOption) => (
+         <button
+            key={themeOption.id}
+            onClick={() => {
+        if (
+          ['space', 'deepforest', 'neonocean', 'cyber'].includes(themeOption.id)
+          && !isPremium
+        ) {
+          setShowPremium(true);
+          return;
+        }
+        setTheme(themeOption.id);
+      }}
+      className="px-3 py-2 rounded-full bg-white/5 text-xs text-white"
+    >
+      {themeOption.label}
+    </button>
+  ))}
+</div>
           {/* Sound toggle */}
           {ambient !== 'none' && (
             <button
@@ -487,8 +540,12 @@ bell.play().then(() => {
           }`}
          >
          <div className="text-center text-white/60 text-sm tracking-wide">
-          Sesiones completadas: {localStorage.getItem('completedSessions') || 0}
-        </div>
+  🏆 Nivel {level}
+</div>
+
+<div className="text-center text-white/60 text-sm tracking-wide">
+  Sesiones completadas: {completedSessions}
+</div>
 
          {isPremium ? (
       <div className="text-center text-white/60 text-sm">
@@ -508,6 +565,22 @@ bell.play().then(() => {
           </div>
         )}
 
+{unlockedAchievements.length > 0 && (
+  <div className="fixed bottom-24 left-1/2 -translate-x-1/2 text-center">
+    <div className="text-yellow-400 text-xs tracking-wider mb-2">
+      LOGROS
+    </div>
+
+    {unlockedAchievements.slice(-1).map((achievement) => (
+      <div
+        key={achievement.sessions}
+        className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-4 py-2 text-white text-sm"
+      >
+        {achievement.title}
+      </div>
+    ))}
+  </div>
+)}
         {/* Background glow */}
         {isRunning && (
           <div className="fixed inset-0 pointer-events-none z-0">
