@@ -38,6 +38,9 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Give permission to Gradle
+        run: chmod +x android/gradlew
+  
       # 7. Decodificar keystore
       - name: Decode Keystore
         run: |
