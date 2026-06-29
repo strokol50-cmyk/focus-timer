@@ -19,7 +19,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          
+           
       - name: Force java 17 environment
         run: echo "org.gradle.java.home=$JAVA_HOME_17_X64">>android/gradle.properties
 
