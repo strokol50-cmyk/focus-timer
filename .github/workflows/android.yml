@@ -20,6 +20,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Check Java version
+        run: |
+          java -version
+          javac -version
+          echo "JAVA_HOME=$JAVA_HOME"
+
       # 3. Instalar Node (Capacitor lo necesita)
       - name: Setup Node
         uses: actions/setup-node@v4
