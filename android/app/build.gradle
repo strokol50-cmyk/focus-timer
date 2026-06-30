@@ -4,10 +4,7 @@ android {
     namespace = "com.fabiannestor.focustimer"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
+
         applicationId "com.fabiannestor.focustimer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
